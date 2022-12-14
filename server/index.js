@@ -3,13 +3,15 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const { urlForClient } = require("./link");
 app.use(cors());
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://192.168.29.43:3000",
+    // origin: "http://192.168.29.43:3000",
+    origin : urlForClient,
     // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
@@ -36,7 +38,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("update_code", (data) => {
-    console.log("\n\n 🚀 ~ file: index.js:37 ~ socket.on ~ data", data);
+    // console.log("\n\n 🚀 ~ file: index.js:37 ~ socket.on ~ data", data);
     socket.to("122").emit("recieveCode", data);
   });
 });
