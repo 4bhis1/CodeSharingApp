@@ -6,12 +6,56 @@ const MultiCursor = ({ socket }) => {
 
   useEffect(() => {
     socket.on("recieveCode", (data) => {
-      updateText(data);
+      updateCursorAtIndex((index) => {
+        updateText((text) => {
+          data[index] = text[index];
+          return data;
+        });
+
+        console.log("Yess rendered");
+
+        return index;
+      });
     });
+  }, [socket]);
+
+  useEffect(() => {
     refrence.current.focus();
-  }, [socket, cursorAtIndex]);
+  }, [cursorAtIndex]);
+
+  // if (!setIntervalRef) {
+  //   const temp = setInterval(() => {
+  //     console.log("Triggered in setInterval", text);
+  //     socket.emit("update_code", text);
+  //     clearInterval(setIntervalRef);
+  //     // updateSetIntervalRef(null)
+  //   }, [3000]);
+  //   updateSetIntervalRef(temp);
+  // }
+
+  // console.log("text", text, setIntervalRef);
 
   let refrence = useRef(null);
+  useEffect(() => {
+    let isCancelled = false;
+
+    refrence.current.style.height = "0px";
+    const scrollHeight = refrence.current.scrollHeight;
+    refrence.current.style.height = scrollHeight + "px";
+
+    const fetchData = async () => {
+      console.log("text", text);
+      socket.emit("update_code", text);
+    };
+
+    const interval = setInterval(fetchData, 3000);
+
+    return () => {
+      isCancelled = true;
+      clearInterval(interval);
+    };
+  }, [text]);
+
   return (
     <>
       {text.map((value, index) => {
@@ -36,13 +80,13 @@ const MultiCursor = ({ socket }) => {
                 color: "ghostwhite",
                 fontSize: 15,
                 display: "flex",
-                alignItems: "center",
+                paddingTop: 5,
                 paddingRight: 5,
               }}
             >
               {index + 1}.
             </div>
-            <input
+            <textarea
               style={{
                 border: 0,
                 outline: "none",
@@ -51,12 +95,15 @@ const MultiCursor = ({ socket }) => {
                 color: "white",
                 paddingLeft: 10,
                 fontSize: 16,
+                resize: "none",
+                overflowY: "hidden",
               }}
               type={text}
               value={value}
               ref={cursorAtIndex === index ? refrence : void 0}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
+                  e.preventDefault();
                   const temp = [
                     ...text.slice(0, index + 1),
                     "",
@@ -101,7 +148,6 @@ const MultiCursor = ({ socket }) => {
                 ];
                 updateCursorAtIndex(index);
                 updateText(temp);
-                socket.emit("update_code", temp);
               }}
             />
           </div>

@@ -5,7 +5,7 @@ import Chat from "./Chat";
 import MultiCursor from "./Components/MultiCursor";
 // const urlForServer = require("../../link");
 // http://192.168.3.94:3000/
-const socket = io.connect("http://192.168.3.94:3001");
+const socket = io.connect("http://192.168.3.94:4001");
 
 function App() {
 
