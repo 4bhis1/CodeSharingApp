@@ -2,8 +2,10 @@
 
 # Wishlist of CodeSharingApp
 
-- [x] Save the Project by name
-- [ ] Add files here
-- [ ] Add folder here
+- [x] Users can see and Edit the code
+- [ ] Two or more people can simultaneously write the code
+- [ ] Save the Project by name and file type
+- [x] Run and Download File
+- [ ] Add and show files and folder here
 - [ ] Host UI and Server
-- [ ] Make it run your local System
+- [ ] Shortcut to run and download file
